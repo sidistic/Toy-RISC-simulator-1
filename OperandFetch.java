@@ -31,7 +31,7 @@ public class OperandFetch {
 
 	public static String n_32bit(int n,String s){
 		for(int i=n;i<32;i++){
-			s=s.substirng(0,1)+s;
+			s=s.substring(0,1)+s;
 		}
 		return s;
 	}
@@ -74,6 +74,16 @@ public class OperandFetch {
 		return v;
 	}
 
+	public static vector<String> jump(String instruction){
+	//	String rs1=instruction.substring(5,10);
+		String rd=instruction.substring(5,10);
+		String immediate=instruction.substirng(10,32);
+		Vector v = new Vector();
+		v.add(rd);
+		v.add(immediate);
+		return v;
+	}
+
 	public void performOF()
 	{
 		if(IF_OF_Latch.isOF_enable())
@@ -85,40 +95,40 @@ public class OperandFetch {
 			String opcode=bin_instruct.substring(0,5);
 			//imm
 			int imm_value=0;
-			int op1=0;
-			int op2=0;
+			int op1=-1;
+			int op2=-2;
 			boolean IsStr;
 			if(opcode=="10111"){
 				IsStr=true;
 			}
 			if(check_opcode(opcode)=="R2I"){
 				Vector v=R2I_or_R2I_alt(bin_instruct);
-				imm_value=binConv(n_32bit(v.get(2)));
-				op1=binConv(n_32bit(v.get(0)));
+				imm_value=binConv(n_32bit(17,v.get(2)));
+				op1=binConv(n_32bit(5,v.get(0)));
 				if(IsStr){
-					op2=binConv(n_32bit(v.get(1)));
+					op2=binConv(n_32bit(5,v.get(1)));
 				}
 			}
 			else if(check_opcode(opcode)=="R2I_alt"){
 				Vector v=R2I_or_R2I_alt(bin_instruct);
-				imm_value=binConv(n_32bit(v.get(2)));
-				op1=binConv(n_32bit(v.get(0)));
+				imm_value=binConv(n_32bit(17,v.get(2)));
+				op1=binConv(n_32bit(5,v.get(0)));
 				if(!IsStr){
-					op2=binConv(n_32bit(v.get(1)));
+					op2=binConv(n_32bit(5,v.get(1)));
 				}
 			}
 			else if(check_opcode=="jmp"){
 				imm_value=binConv(n_32bit(bin_instruct.substirng(10,32)));
-				op1=binConv(n_32bit(v.get(0)));
+			//	op1=binConv(n_32bit(5,v.get(0)));
 				if(!IsStr){
-					op2=binConv(n_32bit(v.get(1)));
+					op2=binConv(n_32bit(5,v.get(0)));
 				}
 			}
 			else if(check_opcode=="R3"){
 				Vector v=R2I_or_R2I_alt(bin_instruct);
-				op1=binConv(n_32bit(v.get(0)));
+				op1=binConv(n_32bit(5,v.get(0)));
 				if(!IsStr){
-					op2=binConv(n_32bit(v.get(1)));
+					op2=binConv(n_32bit(5,v.get(1)));
 				}
 			}
 			OF_EX_Latch.setInstruction(instruction);
